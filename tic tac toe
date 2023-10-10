@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic Tac Toe</title>
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tic Tac Toe</h1>
+    <div class="board" id="board"></div>
+    <p id="message"></p>
+
+    <script>
+        const board = document.getElementById('board');
+        const message = document.getElementById('message');
+        const cells = [];
+        let currentPlayer = 'X';
+        let gameOver = false;
+
+        // Create the game board
+        for (let i = 0; i < 9; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cells.push(cell);
+            board.appendChild(cell);
+
+            cell.addEventListener('click', () => {
+                if (!gameOver && !cell.textContent) {
+                    cell.textContent = currentPlayer;
+                    if (checkWin(currentPlayer)) {
+                        message.textContent = `${currentPlayer} wins!`;
+                        gameOver = true;
+                    } else if (cells.every(cell => cell.textContent !== '')) {
+                        message.textContent = 'It\'s a draw!';
+                        gameOver = true;
+                    } else {
+                        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                    }
+                }
+            });
+        }
+
+        // Define winning combinations
+        const winningCombos = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+            [0, 4, 8], [2, 4, 6] // Diagonals
+        ];
+
+        // Function to check if a player has won
+        function checkWin(player) {
+            return winningCombos.some(combo => {
+                return combo.every(index => cells[index].textContent === player);
+            });
+        }
+    </script>
+</body>
+</html>
